@@ -18,3 +18,15 @@
     3. Deploy Image in EKS
 
 */
+
+pipeline {
+    agent any
+
+    stages {
+        stage('Test') {
+            steps {
+                echo "found jenkinsfile"
+            }
+        }
+    }
+}
