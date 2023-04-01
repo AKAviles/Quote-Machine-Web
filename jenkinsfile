@@ -25,7 +25,7 @@ pipeline {
     agent any
 
     environment {
-        AWS_ECR_URL = '014920475271.dkr.ecr.us-east-1.amazonaws.com/quote-machine'
+        AWS_ECR_URL = 'https://014920475271.dkr.ecr.us-east-1.amazonaws.com/quote-machine'
         AWS_ECR_NAME = 'quote-machine/quote-machine-web'
         
     }
@@ -42,8 +42,8 @@ pipeline {
        stage('Deploy Docker Image') {
             steps {
                 script {
-                    docker.withRegistry('https://014920475271.dkr.ecr.us-east-1.amazonaws.com', 'ecr:us-east-1:aws-resources') {
-                        docker.image('quote-machine/quote-machine-web').push('latest')
+                    docker.withRegistry("${AWS_ECR_URL}", 'ecr:us-east-1:aws-resources') {
+                        docker.image("${AWS_ECR_NAME}").push('latest')
                     }
                 }
             }
