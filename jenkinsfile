@@ -33,22 +33,20 @@ pipeline {
     stages {
         stage('Build Docker Image - tried version') {
             steps {
-                withCredentials([[
-                    $class: 'AmazonWebServicesCredentialsBinding',
-                    credentialsId: 'aws-resources',
-                    accessKeyVariable: 'AWS_ACCESS_KEY_ID',
-                    secretKeyVariable: 'AWS_SECRET_ACCESS_KEY']]) {
-                        sh """
-                            docker build -t ${AWS_ECR_NAME}:0.0.1 -f ./Dockerfile .
-                            docker tag ${AWS_ECR_NAME}:0.0.1 ${AWS_ECR_URL}/${AWS_ECR_NAME}:0.0.1
-                            aws ecr describe-repositories --repository-names ${AWS_ECR_NAME} || aws ecr create-repository --repository-name ${AWS_ECR_NAME}
-                            \$(aws ecr get-login-password)
-                            docker push ${AWS_ECR_URL}/${AWS_ECR_NAME}:0.0.1
-                        """
-                    }
+                script {
+                    docker.build("${AWS_ECR_NAME}:0.0.1")
+                }
             }
         }
 
-       
+       stage('Deploy Docker Image') {
+            steps {
+                script {
+                    docker.withRegistry('014920475271.dkr.ecr.us-east-1.amazonaws.com', 'ecr:us-east-1:aws-resources') {
+                        docker.push('quote-machine/quote-machine-web:0.0.1')
+                    }
+                }
+            }
+       }
     }
 }
