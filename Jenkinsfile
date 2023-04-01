@@ -38,11 +38,11 @@ pipeline {
                     credentialsId: 'aws-resources',
                     accessKeyVariable: 'AWS_ACCESS_KEY_ID',
                     secretKeyVariable: 'AWS_SECRET_ACCESS_KEY']]) {
-                        bat """
+                        sh """
                             docker build -t ${AWS_ECR_NAME}:0.0.1 -f ./Dockerfile .
                             docker tag ${AWS_ECR_NAME}:0.0.1 ${AWS_ECR_URL}/${AWS_ECR_NAME}:0.0.1
                             aws ecr describe-repositories --repository-names ${AWS_ECR_NAME} || aws ecr create-repository --repository-name ${AWS_ECR_NAME}
-                            aws ecr get-login-password
+                            \$(aws ecr get-login-password)
                             docker push ${AWS_ECR_URL}/${AWS_ECR_NAME}:0.0.1
                         """
                     }
