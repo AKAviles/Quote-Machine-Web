@@ -24,10 +24,21 @@
 pipeline {
     agent any
 
+    environment {
+        AWS_ECR_URL = '014920475271.dkr.ecr.us-east-1.amazonaws.com/quote-machine'
+        
+    }
+
     stages {
-        stage('Test') {
+        stage('Build Docker Image') {
             steps {
-                echo "found jenkinsfile"
+                withCredentials([[
+                    $class: 'AmazonWebServicesCredentialsBinding',
+                    credentialsId: 'aws-resources',
+                    accessKeyVariable: 'AWS_ACCESS_KEY_ID',
+                    secretKeyVariable: 'AWS_SECRET_ACCESS_KEY']]) {
+                        sh "aws s3 ls"
+                    }
             }
         }
     }
