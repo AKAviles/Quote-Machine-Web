@@ -25,7 +25,7 @@ pipeline {
     agent any
 
     environment {
-        AWS_ECR_URL = 'https://014920475271.dkr.ecr.us-east-1.amazonaws.com/quote-machine'
+        AWS_ECR_URL = 'https://014920475271.dkr.ecr.us-east-1.amazonaws.com'
         AWS_ECR_NAME = 'quote-machine/quote-machine-web'
         
     }
