@@ -31,7 +31,7 @@ pipeline {
     }
 
     stages {
-        stage('Build Docker Image') {
+        stage('Build Docker Image - tried version') {
             steps {
                 withCredentials([[
                     $class: 'AmazonWebServicesCredentialsBinding',
@@ -46,6 +46,24 @@ pipeline {
                             docker push ${AWS_ECR_URL}/${AWS_ECR_NAME}:0.0.1
                         """
                     }
+            }
+        }
+
+        stage('Build - other version') {
+            steps {
+                script {
+                    app = docker.build("${AWS_ECR_NAME}:0.0.1")
+                }
+            }
+        }
+
+        stage('Deploy to ECR') {
+            steps {
+                script {
+                    docker.withRegistry('014920475271.dkr.ecr.us-east-1.amazonaws.com/quote-machine', 'ecr:us-east-2:aws-resources') {
+                        app.push()
+                    }
+                }
             }
         }
     }
