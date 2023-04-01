@@ -31,24 +31,24 @@ pipeline {
     }
 
     stages {
-        
-
-        stage('Build - other version') {
+        stage('Build Docker Image - tried version') {
             steps {
-                script {
-                    app = docker.build("${AWS_ECR_NAME}:0.0.1")
-                }
-            }
-        }
-
-        stage('Deploy to ECR') {
-            steps {
-                script {
-                    docker.withRegistry('014920475271.dkr.ecr.us-east-1.amazonaws.com', 'aws-ecr') {
-                        app.push()
+                withCredentials([[
+                    $class: 'AmazonWebServicesCredentialsBinding',
+                    credentialsId: 'aws-resources',
+                    accessKeyVariable: 'AWS_ACCESS_KEY_ID',
+                    secretKeyVariable: 'AWS_SECRET_ACCESS_KEY']]) {
+                        bat """
+                            \$(Get-ECRLoginCommand).Password | docker login --username AWS --password-stdin 014920475271.dkr.ecr.us-east-1.amazonaws.com
+                            docker build -t ${AWS_ECR_NAME}:0.0.1 -f ./Dockerfile .
+                            docker tag ${AWS_ECR_NAME}:0.0.1 ${AWS_ECR_URL}/${AWS_ECR_NAME}:0.0.1
+                            aws ecr describe-repositories --repository-names ${AWS_ECR_NAME} || aws ecr create-repository --repository-name ${AWS_ECR_NAME}
+                            docker push ${AWS_ECR_URL}/${AWS_ECR_NAME}:0.0.1
+                        """
                     }
-                }
             }
         }
+
+       
     }
 }
