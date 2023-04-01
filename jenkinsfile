@@ -34,7 +34,7 @@ pipeline {
         stage('Build Docker Image - tried version') {
             steps {
                 script {
-                    docker.build("${AWS_ECR_NAME}:0.0.1")
+                    docker.build("${AWS_ECR_NAME}")
                 }
             }
         }
@@ -43,7 +43,7 @@ pipeline {
             steps {
                 script {
                     docker.withRegistry('https://014920475271.dkr.ecr.us-east-1.amazonaws.com', 'ecr:us-east-1:aws-resources') {
-                        docker.image('quote-machine/quote-machine-web').push('0.0.1')
+                        docker.image('quote-machine/quote-machine-web').push('latest')
                     }
                 }
             }
