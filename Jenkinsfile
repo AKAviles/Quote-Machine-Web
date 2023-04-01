@@ -44,7 +44,7 @@ pipeline {
         stage('Deploy to ECR') {
             steps {
                 script {
-                    docker.withRegistry('014920475271.dkr.ecr.us-east-1.amazonaws.com', 'aws-resources') {
+                    docker.withRegistry('014920475271.dkr.ecr.us-east-1.amazonaws.com', 'aws-ecr') {
                         app.push()
                     }
                 }
