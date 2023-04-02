@@ -27,6 +27,7 @@ pipeline {
     environment {
         AWS_ECR_URL = 'https://014920475271.dkr.ecr.us-east-1.amazonaws.com'
         AWS_ECR_NAME = 'quote-machine/quote-machine-web'
+        AWS_ECR_URL_NO_PROTOCOL = '014920475271.dkr.ecr.us-east-1.amazonaws.com'
 
          // Charts
         CHART_NAME = 'personal-charts'
@@ -110,7 +111,7 @@ pipeline {
                            helm repo update
                            helm search repo ${CHART_NAME}
                            aws eks --region us-east-1 update-kubeconfig --name ${AWS_EKS_CLUSTER_NAME}
-                           helm upgrade --install ${PROJECT_NAME} ${CHART_NAME}/${CHART_NAME} -f ${CHART_FILE} --version ${CHART_VERSION} --set image.repository=${AWS_ECR_URL}/${AWS_ECR_NAME} --set-string image.tag=latest
+                           helm upgrade --install ${PROJECT_NAME} ${CHART_NAME}/${CHART_NAME} -f ${CHART_FILE} --version ${CHART_VERSION} --set image.repository=${AWS_ECR_URL_NO_PROTOCOL}/${AWS_ECR_NAME} --set-string image.tag=latest
                         """
                     }
                 }
