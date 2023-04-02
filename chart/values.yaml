@@ -1,0 +1,22 @@
+metadata:
+  name: quote-machine-web
+
+nameOverride: "quote-machine-web"
+fullnameOverride: "quote-machine-web"
+
+replicaCount: 1
+revisionCount: 1
+
+deploy: spec
+
+image:
+  repository: repo
+  pullPolicy: IfNotPresent
+  tag: "latest"
+
+service:
+  type: NodePort
+  port: 3000
+
+spec:
+  nodeName: ip-172-31-20-113.ec2.internal
